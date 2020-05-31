@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using StockManagement.Business.IManager;
+using StockManagement.Business.Manager;
+using StockManagement.Data;
+using StockManagement.Data.IRepositories;
+using StockManagement.Data.Repositories;
 
 namespace StockManagement
 {
@@ -26,6 +26,14 @@ namespace StockManagement
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            services.AddDbContext<StockManagementDbContext>(opt => opt.UseSqlite(connection));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductManager, ProductManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
