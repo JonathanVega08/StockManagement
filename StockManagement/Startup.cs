@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StockManagement.Business;
 using StockManagement.Business.IManager;
 using StockManagement.Business.Manager;
 using StockManagement.Data;
 using StockManagement.Data.IRepositories;
 using StockManagement.Data.Repositories;
+using System;
 
 namespace StockManagement
 {
@@ -25,8 +28,6 @@ namespace StockManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
 
@@ -34,6 +35,16 @@ namespace StockManagement
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductManager, ProductManager>();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new StockManagementProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
