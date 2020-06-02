@@ -8,10 +8,16 @@ namespace StockManagement.Data.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductId { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
+        [MaxLength(100)]
         public string Description { get; set; }
         public int? AgeRestriction { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string Company { get; set; }
+        [Required]
         public float Price { get; set; }
     }
 }
