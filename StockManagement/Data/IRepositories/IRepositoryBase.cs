@@ -6,10 +6,12 @@ namespace StockManagement.Data.IRepositories
 {
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
-        IQueryable<TEntity> FindAll();
+        IQueryable<TEntity> GetAll ();
         IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression);
-        void Create(TEntity entity);
+        TEntity FindById(int id);
+        TEntity Create(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
+        bool Exists(Expression<Func<TEntity, bool>> expression);
     }
 }
