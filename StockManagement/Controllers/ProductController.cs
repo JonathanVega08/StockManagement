@@ -45,6 +45,10 @@ namespace StockManagement.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] ProductModel request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var response = _productManager.AddToStock(request);
 
             return CreatedAtAction(nameof(Get), new { productId = response.ProductId }, response);
@@ -57,6 +61,11 @@ namespace StockManagement.Controllers
             if (!_productManager.IsProductInStock(productId))
             {
                 return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             _productManager.UpdateItem(request, productId);
