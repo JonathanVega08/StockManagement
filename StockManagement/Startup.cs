@@ -71,6 +71,8 @@ namespace StockManagement
                 app.UseHsts();
             }
 
+            app.UseCors();
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }
